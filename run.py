@@ -1,3 +1,5 @@
+# This script is intended for smoke testing.
+# This script is intended for smoke testing.
 from __future__ import annotations
 
 import subprocess
