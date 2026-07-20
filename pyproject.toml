@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "starfuzz"
+version = "0.1.0"
+description = "Stability-aware fuzzing for deep neural networks"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.23",
+  "Pillow>=9.0",
+  "opencv-python>=4.7",
+  "torch>=2.0",
+  "torchvision>=0.15",
+  "tqdm>=4.64"
+]
+
+[project.scripts]
+starfuzz = "starfuzz.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["starfuzz*"]
+
+

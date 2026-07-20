@@ -1,0 +1,41 @@
+{
+  "datasets": {
+    "mnist": "../data/Mnist_png/mnist_png",
+    "cifar10": "../data/cifar10_png/cifar10",
+    "imagenet": "../data/imagenet/val",
+    "tiny-imagenet": "../data/tiny-imagenet-200/train"
+  },
+  "seed_dirs": {
+    "mnist": "../data/Mnist_png/mnist_png",
+    "cifar10": "../seed",
+    "imagenet": "../data/imagenet/val",
+    "tiny-imagenet": "../data/tiny-imagenet-200/train"
+  },
+  "weights": {
+    "mnist": {
+      "lenet4": "../OriModel/LeNet1.pth",
+      "lenet5": "../OriModel/LeNet5.pth"
+    },
+    "cifar10": {
+      "vgg11_bn": "../cifar10_models/state_dicts/vgg11_bn.pt",
+      "vgg13_bn": "../cifar10_models/state_dicts/vgg13_bn.pt",
+      "vgg16_bn": "../cifar10_models/state_dicts/vgg16_bn.pt",
+      "resnet20": null,
+      "resnet34": "../cifar10_models/state_dicts/resnet34.pt",
+      "densenet121": "../cifar10_models/state_dicts/densenet121.pt",
+      "densenet161": "../cifar10_models/state_dicts/densenet161.pt"
+    },
+    "imagenet": {
+      "alexnet": null,
+      "resnet34": null,
+      "densenet121": null,
+      "densenet161": null
+    },
+    "tiny-imagenet": {
+      "alexnet": null,
+      "resnet34": null,
+      "densenet121": null,
+      "densenet161": null
+    }
+  }
+}
