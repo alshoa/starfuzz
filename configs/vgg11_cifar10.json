@@ -1,0 +1,13 @@
+{
+  "model": "vgg11_bn",
+  "dataset": "cifar10",
+  "weights": "../cifar10_models/state_dicts/vgg11_bn.pt",
+  "response_scope_config": "../ResponseScope/cifar10_vgg11.json",
+  "bounds": "../boundary/cifar10_vgg11.json",
+  "seed_dir": "../seed",
+  "output_dir": "runs/vgg11_cifar10",
+  "budget": 100,
+  "rollout_depth": 20,
+  "top_k": 10,
+  "num_bins": 15
+}

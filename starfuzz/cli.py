@@ -62,6 +62,19 @@ def build_arg_parser() -> argparse.ArgumentParser:
     p.add_argument("--seed", type=int, default=1)
     p.add_argument("--image-size", type=int, default=None)
     p.add_argument("--layers", nargs="+", default=None)
+    p.add_argument(
+        "--images-only",
+        dest="images_only",
+        action="store_true",
+        default=True,
+        help="save candidate images without summary JSON files; this is the default",
+    )
+    p.add_argument(
+        "--write-summary",
+        dest="images_only",
+        action="store_false",
+        help="also write per-seed summary.json and run_summary.json",
+    )
 
     sub.add_parser("summarize-paper", help="print a concise summary of StaRFuzz")
     return parser
@@ -282,21 +295,23 @@ def command_fuzz(args) -> None:
                 }
             )
 
-        summary = {
-            "seed_path": str(seed.path),
-            "label": inherited_label,
-            "original_prediction": original_pred,
-            "response_scope_layers": response_scope.layers,
-            "iterations": result.total_iterations,
-            "rollout_failures": result.total_failures,
-            "top_nodes": records,
-        }
-        (seed_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
-        all_results.append(summary)
+        if not args.images_only:
+            summary = {
+                "seed_path": str(seed.path),
+                "label": inherited_label,
+                "original_prediction": original_pred,
+                "response_scope_layers": response_scope.layers,
+                "iterations": result.total_iterations,
+                "rollout_failures": result.total_failures,
+                "top_nodes": records,
+            }
+            (seed_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+            all_results.append(summary)
         print(f"[{seed_no + 1}/{len(seeds)}] saved {len(records)} candidates in {seed_dir}")
 
-    (args.output_dir / "run_summary.json").write_text(json.dumps(all_results, indent=2), encoding="utf-8")
-    print(f"saved run summary: {args.output_dir / 'run_summary.json'}")
+    if not args.images_only:
+        (args.output_dir / "run_summary.json").write_text(json.dumps(all_results, indent=2), encoding="utf-8")
+        print(f"saved run summary: {args.output_dir / 'run_summary.json'}")
 
 
 def command_summarize_paper(_args) -> None:
