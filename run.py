@@ -1,5 +1,4 @@
-# This script is intended for testing.
-# This script is intended for testing.
+# This Python file is used for smoke testing.
 from __future__ import annotations
 
 import subprocess
@@ -7,18 +6,22 @@ import sys
 from pathlib import Path
 
 
-# This script is intended for smoke testing.
 ROOT = Path(__file__).resolve().parent
 WORKSPACE = ROOT.parent
 
 PYTHON = Path(r"C:\Users\yrz\anaconda3\envs\selection\python.exe")
 TRAIN = WORKSPACE / "data" / "cifar10_png" / "cifar10" / "train"
 TEST = WORKSPACE / "data" / "cifar10_png" / "cifar10" / "test"
-WEIGHTS = WORKSPACE / "cifar10_models" / "state_dicts" / "vgg11_bn.pt"
+
+# Default model.
+WEIGHTS = ROOT / "vgg11_bn.pt"
 
 DATASET = "cifar10"
 MODEL = "vgg11_bn"
 DEVICE = None
+
+# Coverage granularity: choose from "all", "basc", "iasc", "irsc".
+COVERAGE_MODE = "basc"
 
 # Short run settings.
 LABEL = 0
@@ -32,7 +35,7 @@ TOP_K = 10
 RUNS = ROOT / "runs"
 BOUNDS = RUNS / "short_vgg11_bounds.json"
 RESPONSE_SCOPE = RUNS / "short_vgg11_response_scope.json"
-OUTPUT_DIR = RUNS / "short_vgg11_images"
+OUTPUT_DIR = RUNS / f"short_vgg11_{COVERAGE_MODE}_images"
 
 
 def run(args: list[str]) -> None:
@@ -134,6 +137,8 @@ def main() -> None:
             str(ROLLOUT_DEPTH),
             "--top-k",
             str(TOP_K),
+            "--coverage-mode",
+            COVERAGE_MODE,
         ]
         + label_args()
     )

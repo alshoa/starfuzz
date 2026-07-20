@@ -62,6 +62,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     p.add_argument("--seed", type=int, default=1)
     p.add_argument("--image-size", type=int, default=None)
     p.add_argument("--layers", nargs="+", default=None)
+    p.add_argument("--coverage-mode", choices=["all", "basc", "iasc", "irsc"], default="all")
     p.add_argument(
         "--images-only",
         dest="images_only",
@@ -228,6 +229,12 @@ def command_fuzz(args) -> None:
     from .mcts import Evaluation, MCTSFuzzer
     from .transforms import default_action_pool
 
+    weights_by_mode = {
+        "all": (1.0, 1.0, 1.2),
+        "basc": (1.0, 0.0, 0.0),
+        "iasc": (0.0, 1.0, 0.0),
+        "irsc": (0.0, 0.0, 1.0),
+    }
     rng = random.Random(args.seed)
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
@@ -247,7 +254,14 @@ def command_fuzz(args) -> None:
 
     for seed_no, seed in enumerate(seeds):
         response_scope = load_response_scope(args.response_scope_config, seed.label, layer_sizes=layer_sizes)
-        coverage = StabilityCoverage(model, preprocess, response_scope, bounds=bounds, num_bins=args.num_bins)
+        coverage = StabilityCoverage(
+            model,
+            preprocess,
+            response_scope,
+            bounds=bounds,
+            num_bins=args.num_bins,
+            weights=weights_by_mode[args.coverage_mode],
+        )
         _original_snapshot, original_logits = coverage.evaluate([seed.image])
         inherited_label = int(seed.label)
         original_pred = int(original_logits.argmax(dim=1)[0])
